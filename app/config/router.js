@@ -16,19 +16,20 @@ import SideMenu from '../screens/SideMenu/SideMenu'
 import FindPlace from '../screens/FindPlace/FindPlace'
 import AuthScreen from '../screens/Auth/Auth'
 import Settings from '../screens/Settings'
+import CodeScanner from '../screens/CodeScanner/CodeScanner'
 
 export const Tabs = createMaterialTopTabNavigator({
   FindPlace: {
     screen: FindPlace,
     navigationOptions: {
-      tabBarLabel: 'Places',
+      tabBarLabel: 'Services',
       tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
     },
   },
-  EmptyScreen: {
-    screen: EmptyScreen,
+  CodeScanner: {
+    screen: CodeScanner,
     navigationOptions: {
-      tabBarLabel: 'Empty',
+      tabBarLabel: 'Authenticate',
       tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
     },
   },
@@ -66,10 +67,14 @@ export const AppStack = createStackNavigator({
   },
   Settings: {
     screen: Settings,
+    navigationOptions: ({ navigation }) => ({
+      title: `Settings`,
+    }),
   },
 }, {
   tabBarOptions: {
     showIcon: true,
+    showLabel: true
   }
 })
 

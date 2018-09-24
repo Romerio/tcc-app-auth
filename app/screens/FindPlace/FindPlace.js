@@ -102,11 +102,10 @@ class FindlaceScreen extends Component {
             >
                 <TouchableOpacity onPress={this.placesSearchHandler} >
                     <View style={styles.searchButon} >
-                        <Text style={styles.searchButonText} >Find Places</Text>
+                        <Text style={styles.searchButonText} >Find Services</Text>
                     </View>
                 </TouchableOpacity>
             </Animated.View>
-
         )
 
         if(this.state.placesLoaded) {
