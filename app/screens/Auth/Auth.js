@@ -90,7 +90,7 @@ class AuthScreen extends Component {
         }
 
         this.props.onTryAuth(authata, this.state.authMode);
-        this.props.navigation.navigate('FindPlace', { data: null });
+        this.props.navigation.navigate('App', { data: null });
     }
 
     updateInputState = (key, value) => {
