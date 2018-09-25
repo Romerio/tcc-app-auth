@@ -6,77 +6,140 @@ import { uiSStopLoading, uiStartLoading } from './index'
 import App from '../../../App'
 
 const apiKey = 'AIzaSyBAjd5C23JbMiLZBcycWUhuKJUltg1DKSk'
+const domain = 'http://53361843.ngrok.io'
 
-export const tryAuth = (authData, authMode) => {
+/*export const tryAuth2 = (authData, authMode) => {
     return dispatch => {
-        console.log('- authMode', authMode)
         dispatch(uiStartLoading())
-        let url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${apiKey}`
+        let url = domain + '/api/users/login'
 
         if(authMode !== 'login') {
-            url = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${apiKey}`
+            url = domain + '/api/users/signup'
         }
 
         fetch(url, {
             method: 'POST',
             body: JSON.stringify({
                 email: authData.email,
-                password: authData.password,
-                returnSecureToken: true
+                password: authData.password
             }),
             headers: {
                 'Content-Type': 'application/json',
             }
         })
         .catch(err => {
+            console.log('- catch 1')
             alert("tryAuth - Something went wrong, sorry :/ - " + err);
             console.log(err);
             dispatch(uiSStopLoading())
         })
         .then(res => res.json())
-        /*.catch(err => {
-            alert("error 4xx - 5xx");
-            console.log(err);
-        })*/
         .then(parsedRes => {
             dispatch(uiSStopLoading())
-            console.log(parsedRes)
-            if(parsedRes.error || !parsedRes.idToken) {
-                alert("tryAuth - Erro de autenticação - " + parsedRes.error ? parsedRes.error.message: '');
+
+            if(parsedRes.error || !parsedRes.data || !parsedRes.data.token) {
+                alert(parsedRes.error.description || parsedRes.message);
             } else {
-                dispatch(authStoreToken(
-                    parsedRes.idToken, 
-                    parsedRes.expiresIn, 
-                    parsedRes.refreshToken)
-                )
+                const data = parsedRes.data
+
+                dispatch(authStoreToken({
+                    userData: {
+                        _id: data._id,
+                        name: data.name,
+                        verificationLevel: data.verificationLevel
+                    },
+                    authData : {
+                        token: data.token
+                    }
+                }))
+
+                console.log('## Logou!')
                 // startMainTabs()
             }
-        });
+        })
+    }
+}*/
+
+export const tryAuth = (authData, authMode) => {
+    return async dispatch => {
+        dispatch(uiStartLoading())
+
+        try {
+            let url = domain + '/api/users/login'
+            if(authMode !== 'login') {
+                url = domain + '/api/users/signup'
+            }
+        
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: authData.email,
+                    password: authData.password,
+                    name: authData.name,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+
+            const parsedRes = await response.json()
+
+            if(parsedRes.error || !parsedRes.data || !parsedRes.data.token) {
+                await dispatch(uiSStopLoading())
+
+                alert(parsedRes.error.description || parsedRes.message);
+
+                return false
+            } else {
+                const data = parsedRes.data
+
+                await dispatch(authStoreToken({
+                    userData: {
+                        _id: data._id,
+                        name: data.name,
+                        verificationLevel: data.verificationLevel
+                    },
+                    authData : {
+                        token: data.token
+                    }
+                }))
+
+                await dispatch(uiSStopLoading())
+
+                return true
+            }
+
+        } catch (e) {
+            await dispatch(uiSStopLoading())
+
+            alert('Erro ao tentar logar - ' + e);
+            return false
+        }
     }
 }
 
-export const authStoreToken = (token, expiresIn, refreshToken) => {
-    return dispatch => {
-        const now = new Date()
-        const expiryDate = now.getTime() + expiresIn * 1000
+export const authStoreToken = ({ userData, authData }) => {
+    return async dispatch => {
 
-        dispatch(authSetToken(token, expiryDate))
+        await dispatch(authSetToken(authData.token))
+        await AsyncStorage.setItem('ap:user:_id', userData._id)
+        await AsyncStorage.setItem('ap:user:name', userData.name)
+        await AsyncStorage.setItem('ap:user:verificationLevel', userData.verificationLevel.toString())
 
-        AsyncStorage.setItem('ap:auth:token', token)
-        AsyncStorage.setItem('ap:auth:expiryDate', expiryDate.toString())
-        AsyncStorage.setItem('ap:auth:refreshToken', refreshToken)
+        await AsyncStorage.setItem('ap:auth:token', authData.token)
+        //AsyncStorage.setItem('ap:auth:expiryDate', expiryDate.toString())
+        //AsyncStorage.setItem('ap:auth:refreshToken', refreshToken)
     }
 }
 
-export const authSetToken = (token, expiryDate) => {
+export const authSetToken = (token) => {
     return {
         type: AUTH_SET_TOKEN,
-        token,
-        expiryDate
+        token
     }
 }
 
-export const authGetToken = () => {
+/*export const authGetToken = () => {
     return (dispatch, getState) => {
         const promise = new Promise((resolve, reject) => {
             const token = getState().auth.token
@@ -151,9 +214,9 @@ export const authGetToken = () => {
                 }
             })
     }
-}
+}*/
 
-export const authAutoSignIn = () => {
+/*export const authAutoSignIn = () => {
     return dispatch => {
         dispatch(authGetToken())
             .then((token) => {
@@ -163,13 +226,16 @@ export const authAutoSignIn = () => {
                 console.log('Fail to fetch authAutoSignIn')
             })
     }
-}
+}*/
 
 export const authClearStorage = () => {
     return dispatch => {
-        AsyncStorage.removeItem('ap:auth:token')
-        AsyncStorage.removeItem('ap:auth:expiryDate')
-        return AsyncStorage.removeItem('ap:auth:refreshToken')
+
+        AsyncStorage.removeItem('ap:user:_id')
+        AsyncStorage.removeItem('ap:user:name')
+        AsyncStorage.removeItem('ap:user:verificationLevel')
+
+        return AsyncStorage.removeItem('ap:auth:token')
     }
 }
 
@@ -177,7 +243,8 @@ export const authLogout = () => {
     return dispatch => {
         dispatch(authClearStorage())
             .then(() => {
-                App()
+                // #TO-DO: Navega para a tela de Autenticação
+                // App()
             })
 
         dispatch(authRemoveToken())

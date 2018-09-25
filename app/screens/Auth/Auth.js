@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 
 import { connect } from 'react-redux'
-// import { tryAuth, authAutoSignIn } from '../../store/actions/index'
+import { tryAuth, authAutoSignIn } from '../../store/actions/index'
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 import HeadingText from '../../components/UI/HeadingText/HeadingText'
@@ -32,6 +32,14 @@ class AuthScreen extends Component {
                 valid: false,
                 validationRules: {
                     isEmail: true
+                }
+            },
+            name: {
+                touched: false,
+                value: '',
+                valid: false,
+                validationRules: {
+                    notEmpty: true
                 }
             },
             password: {
@@ -64,9 +72,9 @@ class AuthScreen extends Component {
         Dimensions.removeEventListener('change', this.updateStyles)
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         this.props.onAutoSignIn()
-    }
+    }*/
 
     switchAuthModeHandler = () => {
         this.setState(prevState => {
@@ -83,14 +91,18 @@ class AuthScreen extends Component {
         })
     }
 
-    authHandler = () => {
+    authHandler = async () => {
         const authata = {
             email: this.state.controls.email.value,
             password: this.state.controls.password.value,
+            name: this.state.controls.name.value
         }
 
-        this.props.onTryAuth(authata, this.state.authMode);
-        this.props.navigation.navigate('App', { data: null });
+        const loginSuccess = await this.props.onTryAuth(authata, this.state.authMode);
+
+        if(loginSuccess) {
+            this.props.navigation.navigate('App', { data: null });
+        }
     }
 
     updateInputState = (key, value) => {
@@ -143,7 +155,7 @@ class AuthScreen extends Component {
         const ignoreConfirmPassword = this.state.authMode === 'login'
         const keys = Object.keys(this.state.controls)
         const invalidControl = keys.findIndex(key => {
-            if(ignoreConfirmPassword && key === 'confirmPassword') {
+            if(ignoreConfirmPassword && (key === 'confirmPassword' || key === 'name')) {
                 return false
             }
 
@@ -156,6 +168,7 @@ class AuthScreen extends Component {
     render() {
         let headingTextContent = null
         let confirmPasswordControll = null
+        let extraSignupData = null
         const disabeleSubmitButton = this.submitButtonIsDisabled()
 
         let submitButton = (
@@ -197,6 +210,20 @@ class AuthScreen extends Component {
                     autoCorrect={false}
                 />
             </View>)
+
+            extraSignupData = (
+                <DefaultInput
+                    placeholder="Your Name"
+                    style={styles.input}
+                    value={this.state.controls.name.value}
+                    onChangeText={(val) => this.updateInputState('name', val)}
+                    valid={this.state.controls.name.valid}
+                    touched={this.state.controls.name.touched}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    keyboardType='email-address'
+                />
+            )
         }
 
         if(this.props.isLoading) {
@@ -229,6 +256,7 @@ class AuthScreen extends Component {
                                     autoCorrect={false}
                                     keyboardType='email-address'
                                 />
+                                {extraSignupData}
                                 <View 
                                     style={
                                         this.state.viewMode === 'portrait' || this.state.authMode === 'login'
@@ -307,8 +335,8 @@ const mapPropsToState = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onTryAuth: () => {}, //(authData, authMode) => dispatch(tryAuth(authData, authMode)),
-        onAutoSignIn: () => {} // () => dispatch(authAutoSignIn())
+        onTryAuth: (authData, authMode) => dispatch(tryAuth(authData, authMode)),
+        // onAutoSignIn: () => {} // () => dispatch(authAutoSignIn())
     }
 }
 

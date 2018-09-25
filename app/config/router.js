@@ -17,6 +17,7 @@ import FindPlace from '../screens/FindPlace/FindPlace'
 import AuthScreen from '../screens/Auth/Auth'
 import Settings from '../screens/Settings'
 import CodeScanner from '../screens/CodeScanner/CodeScanner'
+import AuthLoadingScreen from '../screens/AuthLoadingScreen/AuthLoadingScreen'
 
 export const Tabs = createMaterialTopTabNavigator({
   CodeScanner: {
@@ -95,11 +96,11 @@ export const Drawer = createDrawerNavigator({
 
 export const Auth = createSwitchNavigator(
   {
-    //AuthLoading: AuthLoadingScreen,
+    AuthLoading: AuthLoadingScreen,
     Auth: AuthScreen,
     App: Drawer
   },
   {
-    initialRouteName: 'Auth',
+    initialRouteName: 'AuthLoading',
   }
 );

@@ -17,7 +17,7 @@ const emailValidator = val => {
   };
   
   const notEmptyValidator = (val) => {
-    return val.trim();
+    return !!val.trim();
   };
 
 const validate = (val, rules, connectedValue) => {

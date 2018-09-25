@@ -85,8 +85,6 @@ export default class App extends Component {
       return;
     }
 
-    console.log('-# Leu: ')
-    console.log(result)
     alert('teste - ' + result)
 
     return (

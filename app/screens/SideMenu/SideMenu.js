@@ -2,14 +2,20 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation';
 import {ScrollView, Text, View, StyleSheet} from 'react-native';
+import { connect } from 'react-redux'
+
+import { authLogout } from '../../store/actions/index'
 
 class SideMenu extends Component {
   navigateToScreen = (route) => () => {
-      console.log('- Chamou menu: ' + route)
-
     const navigateAction = NavigationActions.navigate({
       routeName: route
     });
+
+    if(route === 'AuthLoading') {
+      this.props.onLogout()
+    }
+
     this.props.navigation.dispatch(navigateAction);
   }
 
@@ -28,7 +34,7 @@ class SideMenu extends Component {
             </Text>
           </View>
           <View>
-            <Text style={styles.sectionHeadingStyle} onPress={this.navigateToScreen('Logout')} >
+            <Text style={styles.sectionHeadingStyle} onPress={this.navigateToScreen('AuthLoading')} >
                 Logout
             </Text>
           </View>
@@ -66,4 +72,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SideMenu;
+const mapDispatchToProps = dispatch => {
+  return {
+      onLogout: () => dispatch(authLogout())
+  }
+}
+
+export default connect(null, mapDispatchToProps)(SideMenu)
