@@ -19,18 +19,18 @@ import Settings from '../screens/Settings'
 import CodeScanner from '../screens/CodeScanner/CodeScanner'
 
 export const Tabs = createMaterialTopTabNavigator({
-  FindPlace: {
-    screen: FindPlace,
-    navigationOptions: {
-      tabBarLabel: 'Services',
-      tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
-    },
-  },
   CodeScanner: {
     screen: CodeScanner,
     navigationOptions: {
       tabBarLabel: 'Authenticate',
       tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
+    },
+  },
+  FindPlace: {
+    screen: FindPlace,
+    navigationOptions: {
+      tabBarLabel: 'Services',
+      tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
     },
   },
 }, { 
