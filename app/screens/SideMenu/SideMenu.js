@@ -13,7 +13,7 @@ class SideMenu extends Component {
     });
 
     if(route === 'AuthLoading') {
-      this.props.onLogout()
+        this.props.onLogout()
     }
 
     this.props.navigation.dispatch(navigateAction);

@@ -1,118 +1,68 @@
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, Alert } from 'react-native'
 
-import { TRY_AUTH, AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN } from './actionsTypes'
+import { AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN } from './actionsTypes'
 import { uiSStopLoading, uiStartLoading } from './index'
-// import startMainTabs from '../../screens/MainTabs/startMainTabs'
-import App from '../../../App'
+import { login, signUp } from '../../api/api'
 
-const apiKey = 'AIzaSyBAjd5C23JbMiLZBcycWUhuKJUltg1DKSk'
-const domain = 'http://53361843.ngrok.io'
-
-/*export const tryAuth2 = (authData, authMode) => {
-    return dispatch => {
-        dispatch(uiStartLoading())
-        let url = domain + '/api/users/login'
-
-        if(authMode !== 'login') {
-            url = domain + '/api/users/signup'
-        }
-
-        fetch(url, {
-            method: 'POST',
-            body: JSON.stringify({
-                email: authData.email,
-                password: authData.password
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .catch(err => {
-            console.log('- catch 1')
-            alert("tryAuth - Something went wrong, sorry :/ - " + err);
-            console.log(err);
-            dispatch(uiSStopLoading())
-        })
-        .then(res => res.json())
-        .then(parsedRes => {
-            dispatch(uiSStopLoading())
-
-            if(parsedRes.error || !parsedRes.data || !parsedRes.data.token) {
-                alert(parsedRes.error.description || parsedRes.message);
-            } else {
-                const data = parsedRes.data
-
-                dispatch(authStoreToken({
-                    userData: {
-                        _id: data._id,
-                        name: data.name,
-                        verificationLevel: data.verificationLevel
-                    },
-                    authData : {
-                        token: data.token
-                    }
-                }))
-
-                console.log('## Logou!')
-                // startMainTabs()
-            }
-        })
-    }
-}*/
+const alertError = (e = {}) => {
+    Alert.alert(
+        e.message || e.title || 'Alert',
+        e.description || e.message || 'Error',
+        [
+          { text: 'Ok', onPress: () => {} },
+        ],
+        { cancellable: true }
+      )
+}
 
 export const tryAuth = (authData, authMode) => {
     return async dispatch => {
         dispatch(uiStartLoading())
 
         try {
-            let url = domain + '/api/users/login'
-            if(authMode !== 'login') {
-                url = domain + '/api/users/signup'
+            const payload = {
+                email: authData.email,
+                password: authData.password,
+                name: authData.name,
             }
-        
-            const response = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify({
-                    email: authData.email,
-                    password: authData.password,
-                    name: authData.name,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
+            let parsedRes = null
 
-            const parsedRes = await response.json()
-
-            if(parsedRes.error || !parsedRes.data || !parsedRes.data.token) {
-                await dispatch(uiSStopLoading())
-
-                alert(parsedRes.error.description || parsedRes.message);
-
-                return false
+            if(authMode === 'login') {
+                parsedRes = await login({ payload })
             } else {
-                const data = parsedRes.data
-
-                await dispatch(authStoreToken({
-                    userData: {
-                        _id: data._id,
-                        name: data.name,
-                        verificationLevel: data.verificationLevel
-                    },
-                    authData : {
-                        token: data.token
-                    }
-                }))
-
-                await dispatch(uiSStopLoading())
-
-                return true
+                parsedRes = await signUp({ payload })
             }
 
+            if(!parsedRes.token) {
+                await dispatch(uiSStopLoading())
+
+                alertError({
+                    title: 'Error',
+                    description: 'Falha na autenticação',
+                })
+                
+                return false
+            }
+
+            await dispatch(authStoreToken({
+                userData: {
+                    _id: parsedRes._id,
+                    name: parsedRes.name,
+                    verificationLevel: parsedRes.verificationLevel
+                },
+                authData : {
+                    token: parsedRes.token
+                }
+            }))
+
+            await dispatch(uiSStopLoading())
+
+            return true
         } catch (e) {
             await dispatch(uiSStopLoading())
 
-            alert('Erro ao tentar logar - ' + e);
+            alertError(e)
+            
             return false
         }
     }
@@ -122,13 +72,11 @@ export const authStoreToken = ({ userData, authData }) => {
     return async dispatch => {
 
         await dispatch(authSetToken(authData.token))
+
         await AsyncStorage.setItem('ap:user:_id', userData._id)
         await AsyncStorage.setItem('ap:user:name', userData.name)
         await AsyncStorage.setItem('ap:user:verificationLevel', userData.verificationLevel.toString())
-
         await AsyncStorage.setItem('ap:auth:token', authData.token)
-        //AsyncStorage.setItem('ap:auth:expiryDate', expiryDate.toString())
-        //AsyncStorage.setItem('ap:auth:refreshToken', refreshToken)
     }
 }
 
@@ -136,6 +84,33 @@ export const authSetToken = (token) => {
     return {
         type: AUTH_SET_TOKEN,
         token
+    }
+}
+
+export const authClearStorage = () => {
+    return dispatch => {
+        AsyncStorage.removeItem('ap:user:_id')
+        AsyncStorage.removeItem('ap:user:name')
+        AsyncStorage.removeItem('ap:user:verificationLevel')
+
+        return AsyncStorage.removeItem('ap:auth:token')
+    }
+}
+
+export const authLogout = () => {
+    return dispatch => {
+        dispatch(authClearStorage())
+            .then(() => {
+                // Navega para a tela de Autenticação
+            })
+
+        dispatch(authRemoveToken())
+    }
+}
+
+export const authRemoveToken = () => {
+    return {
+        type: AUTH_REMOVE_TOKEN
     }
 }
 
@@ -227,32 +202,3 @@ export const authSetToken = (token) => {
             })
     }
 }*/
-
-export const authClearStorage = () => {
-    return dispatch => {
-
-        AsyncStorage.removeItem('ap:user:_id')
-        AsyncStorage.removeItem('ap:user:name')
-        AsyncStorage.removeItem('ap:user:verificationLevel')
-
-        return AsyncStorage.removeItem('ap:auth:token')
-    }
-}
-
-export const authLogout = () => {
-    return dispatch => {
-        dispatch(authClearStorage())
-            .then(() => {
-                // #TO-DO: Navega para a tela de Autenticação
-                // App()
-            })
-
-        dispatch(authRemoveToken())
-    }
-}
-
-export const authRemoveToken = () => {
-    return {
-        type: AUTH_REMOVE_TOKEN
-    }
-}
