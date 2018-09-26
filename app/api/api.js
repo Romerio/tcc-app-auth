@@ -35,9 +35,13 @@ const fetchData = async ({url = '', method = 'GET', payload = {}, headers = {}})
 
 export const login = async ({ payload }) => {
     try {
-        let url = mekeUrl(ROUTES.LOGIN)
+        let url = mekeUrl(ROUTES.LOGIN.PATH)
 
-        const responseData = await fetchData({ url, method: 'POST', payload })
+        const responseData = await fetchData({ 
+            url,
+            method: ROUTES.LOGIN.METHOD,
+            payload
+        })
 
         return responseData
     } catch (e) {
@@ -47,9 +51,13 @@ export const login = async ({ payload }) => {
 
 export const signUp = async ({ payload }) => {
     try {
-        let url = mekeUrl(ROUTES.SIGIN_UP)
+        let url = mekeUrl(ROUTES.SIGIN_UP.PATH)
 
-        const responseData = await fetchData({ url, method: 'POST', payload })
+        const responseData = await fetchData({ 
+            url,
+            method: ROUTES.SIGIN_UP.METHOD,
+            payload
+        })
 
         return responseData
     } catch (e) {
