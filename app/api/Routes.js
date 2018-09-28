@@ -11,12 +11,7 @@ export default {
         PATH: `${baseUrl}/api/users/signup`,
         METHOD: 'POST'
     },
-    USERS: {
-        SERVICES: {
-            PATH: `${baseUrl}/api/users/services`,
-            METHOD: 'GET'
-        }
-    },
+    USERS: { },
     SERVICES: {
         ALL: {
             PATH: `${baseUrl}/api/services`,
@@ -24,6 +19,3 @@ export default {
         }
     }
 }
-
-// PATH: `${baseUrl}/api/user/services`,
-// PATH: `${baseUrl}/api/services/all`,

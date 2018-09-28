@@ -24,7 +24,6 @@ export const getServices = (query = {}) => {
             for (let key in parsedRes) {
                 services.push({
                     ...parsedRes[key],
-                    //image: image,
                     key: parsedRes[key]._id
                 });
             }
