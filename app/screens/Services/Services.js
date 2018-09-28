@@ -9,9 +9,9 @@ import {
 import { connect } from 'react-redux'
 
 import ServiceList from '../../components/ServiceList/ServiceList'
-import { getPlaces } from '../../store/actions/index'
+import { getServices } from '../../store/actions/index'
 
-class FindlaceServices extends Component {
+class FindServices extends Component {
     static navigatorStyle = {
         navBarButtonColor: 'orange'
     }
@@ -29,15 +29,12 @@ class FindlaceServices extends Component {
     }
 
     componentDidMount(event) {
-        this.props.onLoadPlaces()
+        this.props.onLoadServices()
     }
 
-    onNavigatorEvent = event => {
+    /*onNavigatorEvent = event => {
         if(event.type === 'ScreenChangedEvent' && event.id === 'willAppear') {
-            this.props.onLoadPlaces()
-            /*this.setState({
-                placesLoaded: false
-            })*/
+            this.props.onLoadServices()
         }
 
         if(event.type === 'NavBarButtonPress') {
@@ -48,7 +45,7 @@ class FindlaceServices extends Component {
                 })
             }
         }
-    }
+    }*/
 
     placesLoadedHandler = () => {
         Animated.timing(this.state.placesAnim, {
@@ -73,16 +70,18 @@ class FindlaceServices extends Component {
     }
     
     itemSelectedHandler = key => {
-        const selectedPlace = this.props.places.find(p => p.key === key)
+        const selectedPlace = this.props.services.find(p => p.key === key)
 
-        this.props.navigator.push({
+        console.log('- Servico selecionado: ' + selectedPlace.name)
+
+        /*this.props.navigator.push({
             screen: "awesome-places.PlaceDetailScreen",
             title: selectedPlace.name,
             passProps: {
                 selectedPlace
             },
             animationType: 'slide-horizontal'
-        })
+        })*/
     }
 
     render() {
@@ -116,7 +115,7 @@ class FindlaceServices extends Component {
                     }}
                 >
                     <ServiceList
-                        places={this.props.places}
+                        services={this.props.services}
                         onItemSelected={this.itemSelectedHandler}
                     />
                 </Animated.View>
@@ -153,14 +152,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        places: state.places.places
+        services: state.services.services
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoadPlaces: () => dispatch(getPlaces())
+        onLoadServices: () => dispatch(getServices())
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FindlaceServices)
+export default connect(mapStateToProps, mapDispatchToProps)(FindServices)

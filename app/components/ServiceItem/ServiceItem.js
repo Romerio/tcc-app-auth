@@ -1,15 +1,21 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    TouchableOpacity, 
+    Image 
+} from 'react-native'
 
 const listitem = (props) => (
     <TouchableOpacity  onPress={props.onItemPressed} >
         <View style={styles.listItem}>
             <Image 
-                source={props.placeImage} 
+                source={{uri: props.serviceImage}} 
                 resizeMode="cover"
-                style={styles.placeImage}
+                style={styles.serviceImage}
             />
-            <Text>{props.placeName}</Text>
+            <Text>{props.serviceName}</Text>
         </View>
     </TouchableOpacity>)
 
@@ -22,7 +28,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    placeImage: {
+    serviceImage: {
         marginRight: 8,
         height: 30,
         width: 30

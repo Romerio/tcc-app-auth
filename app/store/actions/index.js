@@ -17,3 +17,7 @@ export {
     uiSStopLoading,
     uiStartLoading
 } from './ui'
+
+export {
+    getServices,
+} from './services'

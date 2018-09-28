@@ -1,22 +1,20 @@
 import React from 'react'
 import { FlatList, StyleSheet } from 'react-native'
 
-import ListItem from '../ServiceItem/ServiceItem'
+import ServiceItem from '../ServiceItem/ServiceItem'
 
-import imagePlaceHouder from '../../assets/background-1.jpg'
-
-const placeList = (props) => (
+const serviceList = (props) => (
     <FlatList style={styles.listContainer}
-        data={props.places}
+        data={props.services}
         onEndReached={() => {
             console.log('# onEndReached')
         }}
         onEndReachedThreshold={0}
         // onRefresh={() => console.log('# onRefresh')}
         renderItem={(info) => (
-            <ListItem 
-                placeName={info.item.name}
-                placeImage={info.item.image}
+            <ServiceItem 
+                serviceName={info.item.name}
+                serviceImage={info.item.image}
                 onItemPressed={() => props.onItemSelected(info.item.key)}
             />
         )}    
@@ -29,4 +27,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default placeList
+export default serviceList

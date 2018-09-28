@@ -3,9 +3,11 @@ import thunk from 'redux-thunk'
 import placesReducer from './reducers/places'
 import uiRducer from './reducers/ui'
 import authRducer from './reducers/auth'
+import servicesReducer from './reducers/services'
 
 const rootReducer = combineReducers({
     places: placesReducer,
+    services: servicesReducer,
     ui: uiRducer,
     auth: authRducer
 })

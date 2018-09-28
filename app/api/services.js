@@ -3,7 +3,7 @@ import fetchData, { mekeUrl } from './fetchData'
 
 export const getAllServices = async ({ query }) => {
     try {
-        let url = mekeUrl(ROUTES.SERVICES.ALL.PATH, { query })
+        let url = mekeUrl(ROUTES.SERVICES.ALL.PATH, query || {})
 
         const responseData = await fetchData({ 
             url,

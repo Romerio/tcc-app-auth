@@ -1,20 +1,36 @@
-export const mekeUrl = (url = '', query) => {
-    return url
+import {
+    AsyncStorage,
+} from 'react-native';
+import queryString from 'query-string'
+
+export const mekeUrl = (url = '', query = {}) => {
+    try {
+        const stringified = queryString.stringify(query);
+
+        return `${url}?${stringified || ''}`
+    }catch(e) {
+        throw e
+    }
 }
 
 export default fetchData = async ({url = '', method = 'GET', payload = {}, headers = {}}) => {
     try {
         const token = await AsyncStorage.getItem('ap:auth:token')
 
-        const response = await fetch(url, {
+        const requestData = {
             method,
-            body: JSON.stringify(payload),
             headers: {
                 'Content-Type': 'application/json',
                 'x-access-token': token,
                 ...headers,
             }
-        })
+        }
+
+        if(method !== 'GET') {
+            requestData.body = JSON.stringify(payload)
+        }
+
+        const response = await fetch(url, requestData)
     
         const parsedRes = await response.json()
 
@@ -27,6 +43,8 @@ export default fetchData = async ({url = '', method = 'GET', payload = {}, heade
     
         return  parsedRes.data
     } catch(e) {
+        console.log('# error fetchData')
+        console.log(e)
         throw {
             description: e.description || 'An error has catched',
             title: e.title || 'An error has catched',
