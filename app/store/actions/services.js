@@ -3,8 +3,6 @@ import { AsyncStorage, Alert } from 'react-native'
 import { SET_SERVICES } from './actionsTypes'
 import { getAllServices } from '../../api/index'
 
-import image from '../../assets/background-1.jpg'
-
 const alertError = (e = {}) => {
     Alert.alert(
         e.message || e.title || 'Alert',
