@@ -2,7 +2,7 @@ import { AsyncStorage, Alert } from 'react-native'
 
 import { AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN } from './actionsTypes'
 import { uiSStopLoading, uiStartLoading } from './index'
-import { login, signUp } from '../../api/api'
+import { login, signUp } from '../../api/user'
 
 const alertError = (e = {}) => {
     Alert.alert(

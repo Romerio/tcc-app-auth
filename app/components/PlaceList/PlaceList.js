@@ -8,6 +8,10 @@ import imagePlaceHouder from '../../assets/background-1.jpg'
 const placeList = (props) => (
     <FlatList style={styles.listContainer}
         data={props.places}
+        onEndReached={() => {
+            console.log('# onEndReached')
+        }}
+        onRefresh={() => console.log('# onRefresh')}
         renderItem={(info) => (
             <ListItem 
                 placeName={info.item.name}

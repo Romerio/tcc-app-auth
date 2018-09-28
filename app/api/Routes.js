@@ -10,5 +10,11 @@ export default {
     SIGIN_UP: {
         PATH: `${baseUrl}/api/users/signup`,
         METHOD: 'POST'
+    },
+    SERVICES: {
+        ALL: {
+            PATH: `${baseUrl}/api/services/all`,
+            METHOD: 'GET'
+        }
     }
 }

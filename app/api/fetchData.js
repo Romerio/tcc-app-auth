@@ -1,17 +1,18 @@
-import ROUTES from './Routes'
-
-const mekeUrl = (url = '', params = {}) => {
+export const mekeUrl = (url = '', query) => {
     return url
 }
 
-const fetchData = async ({url = '', method = 'GET', payload = {}, headers = {}}) => {
+export default fetchData = async ({url = '', method = 'GET', payload = {}, headers = {}}) => {
     try {
+        const token = await AsyncStorage.getItem('ap:auth:token')
+
         const response = await fetch(url, {
             method,
             body: JSON.stringify(payload),
             headers: {
                 'Content-Type': 'application/json',
-                ...headers
+                'x-access-token': token,
+                ...headers,
             }
         })
     
@@ -30,37 +31,5 @@ const fetchData = async ({url = '', method = 'GET', payload = {}, headers = {}})
             description: e.description || 'An error has catched',
             title: e.title || 'An error has catched',
         }
-    }
-}
-
-export const login = async ({ payload }) => {
-    try {
-        let url = mekeUrl(ROUTES.LOGIN.PATH)
-
-        const responseData = await fetchData({ 
-            url,
-            method: ROUTES.LOGIN.METHOD,
-            payload
-        })
-
-        return responseData
-    } catch (e) {
-        throw e
-    }
-}
-
-export const signUp = async ({ payload }) => {
-    try {
-        let url = mekeUrl(ROUTES.SIGIN_UP.PATH)
-
-        const responseData = await fetchData({ 
-            url,
-            method: ROUTES.SIGIN_UP.METHOD,
-            payload
-        })
-
-        return responseData
-    } catch (e) {
-        throw e
     }
 }
