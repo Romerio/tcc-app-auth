@@ -32,18 +32,3 @@ export const signUp = async ({ payload }) => {
         throw e
     }
 }
-
-export const getServices = async ({ query }) => {
-    try {
-        let url = mekeUrl(ROUTES.USERS.SERVICES.PATH, query || {})
-
-        const responseData = await fetchData({ 
-            url,
-            method: ROUTES.USERS.SERVICES.METHOD,
-        })
-
-        return responseData
-    } catch (e) {
-        throw e
-    }
-}

@@ -1,7 +1,6 @@
 export {
     login,
-    signUp,
-    getServices
+    signUp
 } from './user'
 
 export {
