@@ -8,11 +8,10 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-import PlaceList from '../../components/PlaceList/PlaceList'
+import ServiceList from '../../components/ServiceList/ServiceList'
 import { getPlaces } from '../../store/actions/index'
-import Service from '../Services/Services'
 
-class FindlaceScreen extends Component {
+class FindlaceServices extends Component {
     static navigatorStyle = {
         navBarButtonColor: 'orange'
     }
@@ -116,7 +115,7 @@ class FindlaceScreen extends Component {
                         opacity: this.state.placesAnim
                     }}
                 >
-                    <PlaceList
+                    <ServiceList
                         places={this.props.places}
                         onItemSelected={this.itemSelectedHandler}
                     />
@@ -164,4 +163,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FindlaceScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(FindlaceServices)

@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, StyleSheet } from 'react-native'
 
-import ListItem from '../ListItem/ListItem'
+import ListItem from '../ServiceItem/ServiceItem'
 
 import imagePlaceHouder from '../../assets/background-1.jpg'
 

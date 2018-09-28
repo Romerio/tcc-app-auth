@@ -18,6 +18,7 @@ import AuthScreen from '../screens/Auth/Auth'
 import Settings from '../screens/Settings'
 import CodeScanner from '../screens/CodeScanner/CodeScanner'
 import AuthLoadingScreen from '../screens/AuthLoadingScreen/AuthLoadingScreen'
+import Services from '../screens/Services/Services'
 
 export const Tabs = createMaterialTopTabNavigator({
   CodeScanner: {
@@ -27,8 +28,8 @@ export const Tabs = createMaterialTopTabNavigator({
       tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
     },
   },
-  FindPlace: {
-    screen: FindPlace,
+  Services: {
+    screen: Services,
     navigationOptions: {
       tabBarLabel: 'Services',
       tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
