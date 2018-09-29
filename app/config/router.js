@@ -1,25 +1,50 @@
 import React from 'react';
-import { Button } from 'react-native'
 import { 
   createMaterialTopTabNavigator,
-  createBottomTabNavigator,
   createStackNavigator,
   createDrawerNavigator,
   createSwitchNavigator
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import EmptyScreen from '../screens/Tests/EmptyScreen'
-
 import SideMenuButton from '../screens/SideMenuButton/SideMenuButton'
 import SideMenu from '../screens/SideMenu/SideMenu'
-import FindPlace from '../screens/FindPlace/FindPlace'
 import AuthScreen from '../screens/Auth/Auth'
 import Settings from '../screens/Settings'
 import CodeScanner from '../screens/CodeScanner/CodeScanner'
 import AuthLoadingScreen from '../screens/AuthLoadingScreen/AuthLoadingScreen'
 import Services from '../screens/Services/Services'
 
+export const ServiceManager = createStackNavigator({
+  Services: { // Mostra todos os serviços
+    screen: Services,
+    navigationOptions: ({ navigation }) => ({
+      title: `Services`,
+      headerLeft: ({ tintColor }) => <SideMenuButton />,
+      headerStyle:  {
+          backgroundColor: '#0080FF',
+      },
+      headerTitleStyle: { 
+        color: 'white' 
+      }
+    }),
+  },
+  ServiceDetail: {
+    screen: Services,
+    navigationOptions: ({ navigation }) => ({
+      title: `Services`,
+    }),
+  },
+}, {
+  mode: 'modal',
+  headerMode: 'none',
+})
+
+/*
+  Contém a tab inicial da aplicação
+    Esquerda: Leitor de QRCode para autenticar
+    Direita: Lista de serviços cadastrados 
+*/
 export const Tabs = createMaterialTopTabNavigator({
   CodeScanner: {
     screen: CodeScanner,
@@ -28,13 +53,14 @@ export const Tabs = createMaterialTopTabNavigator({
       tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
     },
   },
-  Services: {
+  Services: { // Mostra serviços do usuário
     screen: Services,
     navigationOptions: {
-      tabBarLabel: 'Services',
+      swipeEnabled: false,
+      tabBarLabel: 'My Services',
       tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
     },
-  },
+  }
 }, { 
   tabBarOptions: { 
     style: { 
@@ -45,6 +71,12 @@ export const Tabs = createMaterialTopTabNavigator({
   }
 });
 
+/*  Telas da aplicação principal
+    Contén: 
+      Tab (Autenticador e lista de serviços do usuário)
+      Gerenciador de serviços
+      Acesso aos itens do Menu lateral (SideMenu)
+*/
 export const AppStack = createStackNavigator({
   Tabs: {
     screen: Tabs,
@@ -57,20 +89,18 @@ export const AppStack = createStackNavigator({
       headerTitleStyle: { 
         color: 'white' 
       }
-      //tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
-      /*headerLeft: (
-        <Button
-          onPress={() => alert('press')}
-          title="+1"
-          color="#fff"
-        />
-      )*/
     }),
   },
   Settings: {
     screen: Settings,
     navigationOptions: ({ navigation }) => ({
       title: `Settings`,
+    }),
+  },
+  ServiceManager: {
+    screen: ServiceManager,
+    navigationOptions: ({ navigation }) => ({
+      title: `Services`,
     }),
   },
 }, {
@@ -80,8 +110,11 @@ export const AppStack = createStackNavigator({
   }
 })
 
-export const Drawer = createDrawerNavigator({
-  Drawer: {
+/*
+  Conecta a aplicação principal ao menu lateral (Drawer)
+*/
+export const AppWithDrawer = createDrawerNavigator({
+  AppStack: {
       screen: AppStack
     },
     /*Page2: {
@@ -95,11 +128,15 @@ export const Drawer = createDrawerNavigator({
     drawerWidth: 300
 });
 
+/*
+  Se o usuário está autenticado, vai para App
+  Se não está autenticado, vai para Auth
+*/
 export const Auth = createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Auth: AuthScreen,
-    App: Drawer
+    App: AppWithDrawer
   },
   {
     initialRouteName: 'AuthLoading',

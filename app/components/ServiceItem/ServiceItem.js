@@ -17,7 +17,8 @@ const listitem = (props) => (
             />
             <Text>{props.serviceName}</Text>
         </View>
-    </TouchableOpacity>)
+    </TouchableOpacity>
+)
 
 const styles = StyleSheet.create({
     listItem: {

@@ -1,33 +1,94 @@
 import React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import ActionButton from 'react-native-action-button';
+import { withNavigation } from 'react-navigation';
 
 import ServiceItem from '../ServiceItem/ServiceItem'
+import Swipeout from 'react-native-swipeout';
 
-const serviceList = (props) => (
-    <View style={{height: '100%'}}>
-        <FlatList style={styles.listContainer}
-            data={props.services}
-            onEndReached={() => {
-                console.log('# onEndReached')
-            }}
-            onEndReachedThreshold={0}
-            // onRefresh={() => console.log('# onRefresh')}
-            renderItem={(info) => (
-                <ServiceItem
-                    serviceName={info.item.name}
-                    serviceImage={info.item.image}
-                    onItemPressed={() => props.onItemSelected(info.item.key)}
+let swipeBtns = [{
+    text: 'Delete',
+    backgroundColor: 'red',
+    underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+    onPress: () => { console.log('swipeBtns press') }
+}];
+
+/*
+// Buttons
+let swipeBtns = [{
+    text: 'Delete',
+    backgroundColor: 'red',
+    underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+    onPress: () => { console.log('swipeBtns press') }
+}];
+
+    <Swipeout wipeout right={swipeBtns}
+        autoClose={true}
+        backgroundColor= 'transparent'>
+        <TouchableOpacity  onPress={props.onItemPressed} >
+            <View style={styles.listItem}>
+                <Image 
+                    source={{uri: props.serviceImage}} 
+                    resizeMode="cover"
+                    style={styles.serviceImage}
                 />
-            )}    
-        />
-        <ActionButton 
-            buttonColor="#3498db" 
-            style={{zIndex: 1}}
-            onPress={() => console.log("notes tapped!")}
-        />
-    </View>
-)
+                <Text>{props.serviceName}</Text>
+            </View>
+        </TouchableOpacity>
+    </Swipeout>
+*/
+
+const serviceList = (props) => {
+    const renderFlatItem = (info, enableSwipeout = false) => {
+        let flatItemContent = (
+            <ServiceItem
+                serviceName={info.item.name}
+                serviceImage={info.item.image}
+                onItemPressed={() => props.onItemSelected(info.item.key)}
+            />
+        )
+    
+        if(enableSwipeout) {
+            flatItemContent = (
+                <Swipeout wipeout right={swipeBtns}
+                    autoClose={true}
+                    backgroundColor= 'transparent'>
+                    <ServiceItem
+                        serviceName={info.item.name}
+                        serviceImage={info.item.image}
+                        onItemPressed={() => props.onItemSelected(info.item.key)}
+                    />
+                </Swipeout>
+            )
+        }
+    
+        return flatItemContent
+    }
+
+    return (
+            <View style={{height: '100%'}}>
+            <FlatList style={styles.listContainer}
+                data={props.services}
+                onEndReached={() => {
+                    console.log('# onEndReached')
+                }}
+                onEndReachedThreshold={0}
+                // onRefresh={() => console.log('# onRefresh')}
+                renderItem={(info) => renderFlatItem(info, props.enableSwipeout)}
+            />
+            {props.showAddButton
+            ? 
+                <ActionButton 
+                    buttonColor="#3498db" 
+                    style={{zIndex: 1}}
+                    onPress={() => props.navigation.navigate('ServiceManager', { tabPresentationMode: false })}
+                />
+            : null
+            }
+
+        </View>
+    )
+}
 
 /*
         <ActionButton buttonColor="rgba(231,76,60,1)" style={{zIndex: 3}}
@@ -78,4 +139,4 @@ const styles = StyleSheet.create({
       },
   });
 
-export default serviceList
+export default withNavigation(serviceList);

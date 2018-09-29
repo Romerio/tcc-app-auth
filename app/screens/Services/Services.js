@@ -19,17 +19,39 @@ class FindServices extends Component {
     state = {
         placesLoaded: false,
         removeAnim: new Animated.Value(1),
-        placesAnim: new Animated.Value(0)
+        placesAnim: new Animated.Value(0),
+        tabPresentationMode: true
     }
     
     constructor(props) {
         super(props)
-        // #TO-DO: mudar navegação
-        // this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
     }
 
     componentDidMount(event) {
-        this.props.onLoadServices()
+        console.log('- Abriu a lista de services')
+        console.log(this.props.navigation.state.params)
+        
+        if(this.props.navigation.state.params && typeof this.props.navigation.state.params.tabPresentationMode === 'boolean') {
+            // Veio de uma navegação para gerenciar serviços
+
+            this.setState({
+                ...this.state,
+                tabPresentationMode: this.props.navigation.state.params.tabPresentationMode
+            })
+
+            this.props.onLoadServices()
+        } else {
+            // Veio para a lista de serviços do usuário
+            this.setState({
+                ...this.state,
+                tabPresentationMode: true
+            })
+
+            // #TO-DO: carregar apenas os serviços do usuário
+            this.props.onLoadServices()
+        }
+
+        console.log('##')
     }
 
     /*onNavigatorEvent = event => {
@@ -119,13 +141,17 @@ class FindServices extends Component {
                         onItemSelected={this.itemSelectedHandler}
                     />
                 </Animated.View>
-
             )
         }
 
         return (
-            <View style={this.state.placesLoaded ? null : styles.buttonContainer} >
-                {content}
+            <View >
+                <ServiceList
+                        services={this.props.services}
+                        onItemSelected={this.itemSelectedHandler}
+                        showAddButton={this.state.tabPresentationMode}
+                        enableSwipeout={this.state.tabPresentationMode}
+                    />
             </View>
         )
     }
