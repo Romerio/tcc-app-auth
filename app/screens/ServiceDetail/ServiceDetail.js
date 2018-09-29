@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, View, ScrollView, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { withMappedNavigationProps } from 'react-navigation-props-mapper'
+import ButtonWithBackground from '../../components/UI/ButtonWithBackground/ButtonWithBackground'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 
@@ -22,12 +23,13 @@ const placeDetail = (props) => {
     return (
         <ScrollView style={styles.modalContainer} >
             {modalContent}
-            <View>
-                <TouchableOpacity onPress={props.onItemDeleted} >
-                    <View style={styles.deleteButton} >
-                        <Icon size={30} name="ios-trash" color="red" />
-                    </View>
-                </TouchableOpacity>
+            <View style={styles.associateButton}>
+                <ButtonWithBackground
+                    onPress={() => {}} 
+                    color="#2966ff"
+                >
+                    Associate
+                </ButtonWithBackground>
             </View>
         </ScrollView>
     )
@@ -61,6 +63,11 @@ const placeDetail = (props) => {
 const styles = StyleSheet.create({
     modalContainer: {
         margin: 22
+    },
+    associateButton: {
+        flex: 1,
+        justifyContent:'center',
+        alignItems: 'center'
     },
     placeImage: {
         height: 200,
