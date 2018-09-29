@@ -1,5 +1,6 @@
 import { AsyncStorage, Alert } from 'react-native'
 
+import { uiSStopLoading, uiStartLoading } from './index'
 import { SET_SERVICES } from './actionsTypes'
 import { getAllServices, getMyServices } from '../../api/index'
 
@@ -17,6 +18,8 @@ const alertError = (e = {}) => {
 export const getServices = (query = {}) => {
     return async dispatch => {
         try {
+            dispatch(uiStartLoading())
+
             let parsedRes = await getAllServices({ query })
 
             const services = [];
@@ -29,9 +32,12 @@ export const getServices = (query = {}) => {
             }
 
             dispatch(setServices(services))
+            await dispatch(uiSStopLoading())
+
             return null
         } catch (e) {
             alertError(e)
+            await dispatch(uiSStopLoading())
             return null
         }
     }
@@ -40,6 +46,8 @@ export const getServices = (query = {}) => {
 export const getUserServices = (query = {}) => {
     return async dispatch => {
         try {
+            dispatch(uiStartLoading())
+
             let parsedRes = await getMyServices({ query })
 
             const services = [];
@@ -52,9 +60,11 @@ export const getUserServices = (query = {}) => {
             }
 
             dispatch(setServices(services)) // talvez fazer setUserServices
+            await dispatch(uiSStopLoading())
             return null
         } catch (e) {
             alertError(e)
+            await dispatch(uiSStopLoading())
             return null
         }
     }

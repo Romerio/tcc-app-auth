@@ -3,6 +3,7 @@ import {
     View,
     Text,
     TouchableOpacity,
+    ActivityIndicator,
     StyleSheet,
     Animated
 } from 'react-native'
@@ -20,17 +21,19 @@ class FindServices extends Component {
         placesLoaded: false,
         removeAnim: new Animated.Value(1),
         placesAnim: new Animated.Value(0),
-        tabPresentationMode: true
+        tabPresentationMode: true,
+        presentindDetail: false
     }
     
     constructor(props) {
         super(props)
 
-        this.props.navigation.addListener('willBlur', this.handleTabWillAppear)
+        this.props.navigation.addListener('didFocus', this.handleTabWillBlur)
     }
 
-    handleTabWillAppear = () => {
-        if(this.state.tabPresentationMode == false) { // Saí da listagem de todos os serviços
+    handleTabWillBlur = () => {
+        console.log('- didFocus', this.state.tabPresentationMode)
+        if(this.state.tabPresentationMode == true) { // Saí da listagem de todos os serviços
             this.props.onLoadUserServices()
         }
     }
@@ -154,16 +157,29 @@ class FindServices extends Component {
                 </Animated.View>
             )
         }*/
+        let content = null
+
+        if(this.props.isLoading) {
+            content = (
+                <View styles={styles.activityIndicator} >
+                    <ActivityIndicator />
+                </View>
+            )
+        } else {
+            content = (
+                <View >
+                    <ServiceList
+                            services={this.props.services}
+                            onItemSelected={this.itemSelectedHandler}
+                            showAddButton={this.state.tabPresentationMode}
+                            enableSwipeout={this.state.tabPresentationMode}
+                        />
+                </View>
+            )
+        }
         
         return (
-            <View >
-                <ServiceList
-                        services={this.props.services}
-                        onItemSelected={this.itemSelectedHandler}
-                        showAddButton={this.state.tabPresentationMode}
-                        enableSwipeout={this.state.tabPresentationMode}
-                    />
-            </View>
+            content
         )
     }
 }
@@ -184,12 +200,18 @@ const styles = StyleSheet.create({
         color: 'orange',
         fontWeight: 'bold',
         fontSize: 26,
+    },
+    activityIndicator: {
+        flex: 1,
+        justifyContent: 'center',
+        height: '100%'
     }
 })
 
 const mapStateToProps = (state) => {
     return {
-        services: state.services.services
+        services: state.services.services,
+        isLoading: state.ui.isLoading
     }
 }
 
