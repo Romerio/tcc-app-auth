@@ -33,7 +33,6 @@ const buttonWithBackground = props => {
     )    
 }
 
-
 const styles = StyleSheet.create({
     button: {
         padding: 10,

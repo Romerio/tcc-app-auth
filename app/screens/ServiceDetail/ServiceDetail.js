@@ -3,14 +3,14 @@ import { Modal, View, ScrollView, Image, Text, StyleSheet, TouchableOpacity } fr
 import { withMappedNavigationProps } from 'react-navigation-props-mapper'
 import ButtonWithBackground from '../../components/UI/ButtonWithBackground/ButtonWithBackground'
 
-import Icon from 'react-native-vector-icons/Ionicons'
+// import Icon from 'react-native-vector-icons/Ionicons'
 
 const placeDetail = (props) => {
     let modalContent = null
 
     if(props.selectedService) {
         modalContent = (
-            <View>
+            <View style={styles.placeDataContainer}>
                 <Image 
                     source={{uri: props.selectedService.image}} 
                     style={styles.placeImage}
@@ -21,7 +21,7 @@ const placeDetail = (props) => {
     }
 
     return (
-        <ScrollView style={styles.modalContainer} >
+        <ScrollView >
             {modalContent}
             <View style={styles.associateButton}>
                 <ButtonWithBackground
@@ -69,9 +69,16 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems: 'center'
     },
+    placeDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     placeImage: {
-        height: 200,
-        width: "100%"
+        // height: 200,
+        margin: 15,
+        aspectRatio: 3/2,
+        width: "70%"
     },
     placeName: {
         fontWeight: 'bold',
@@ -79,8 +86,9 @@ const styles = StyleSheet.create({
         fontSize: 28
     },
     placeDescription: {
+        margin: 15,
         textAlign: 'center',
-        fontSize: 18
+        fontSize: 18,
     },
     deleteButton: {
         alignItems: 'center',

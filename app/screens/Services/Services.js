@@ -104,8 +104,7 @@ class FindServices extends Component {
     
     itemSelectedHandler = key => {
         const selectedService = this.props.services.find(p => p.key === key)
-
-        console.log('- Servico selecionado: ' + selectedService.name)
+        // console.log('- Servico selecionado: ' + selectedService.name)
 
         this.props.navigation.navigate('ServiceDetail', { selectedService, title: selectedService.name })
 
