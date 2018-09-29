@@ -107,7 +107,7 @@ class FindServices extends Component {
     }
 
     render() {
-        let content = (
+        /*let content = (
             <Animated.View
                 style={{
                     opacity: this.state.removeAnim,
@@ -142,7 +142,7 @@ class FindServices extends Component {
                     />
                 </Animated.View>
             )
-        }
+        }*/
 
         return (
             <View >
