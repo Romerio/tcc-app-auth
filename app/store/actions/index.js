@@ -20,4 +20,5 @@ export {
 
 export {
     getServices,
+    getUserServices
 } from './services'

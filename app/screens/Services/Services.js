@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux'
 
 import ServiceList from '../../components/ServiceList/ServiceList'
-import { getServices } from '../../store/actions/index'
+import { getServices, getUserServices } from '../../store/actions/index'
 
 class FindServices extends Component {
     static navigatorStyle = {
@@ -25,11 +25,19 @@ class FindServices extends Component {
     
     constructor(props) {
         super(props)
+
+        this.props.navigation.addListener('willBlur', this.handleTabWillAppear)
     }
 
-    componentDidMount(event) {
-        console.log('- Abriu a lista de services')
-        console.log(this.props.navigation.state.params)
+    handleTabWillAppear = () => {
+        if(this.state.tabPresentationMode == false) { // Saí da listagem de todos os serviços
+            this.props.onLoadUserServices()
+        }
+    }
+
+    componentDidMount() {
+        // console.log('- Abriu a lista de services')
+        // console.log(this.props.navigation.state.params)
         
         if(this.props.navigation.state.params && typeof this.props.navigation.state.params.tabPresentationMode === 'boolean') {
             // Veio de uma navegação para gerenciar serviços
@@ -48,10 +56,10 @@ class FindServices extends Component {
             })
 
             // #TO-DO: carregar apenas os serviços do usuário
-            this.props.onLoadServices()
+            this.props.onLoadUserServices()
         }
 
-        console.log('##')
+        // console.log('##')
     }
 
     /*onNavigatorEvent = event => {
@@ -146,7 +154,7 @@ class FindServices extends Component {
                 </Animated.View>
             )
         }*/
-
+        
         return (
             <View >
                 <ServiceList
@@ -187,7 +195,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoadServices: () => dispatch(getServices())
+        onLoadServices: () => dispatch(getServices()),
+        onLoadUserServices: () => dispatch(getUserServices())
     }
 }
 

@@ -1,7 +1,7 @@
 import { AsyncStorage, Alert } from 'react-native'
 
 import { SET_SERVICES } from './actionsTypes'
-import { getAllServices } from '../../api/index'
+import { getAllServices, getMyServices } from '../../api/index'
 
 const alertError = (e = {}) => {
     Alert.alert(
@@ -37,9 +37,39 @@ export const getServices = (query = {}) => {
     }
 }
 
+export const getUserServices = (query = {}) => {
+    return async dispatch => {
+        try {
+            let parsedRes = await getMyServices({ query })
+
+            const services = [];
+
+            for (let key in parsedRes) {
+                services.push({
+                    ...parsedRes[key],
+                    key: parsedRes[key]._id
+                });
+            }
+
+            dispatch(setServices(services)) // talvez fazer setUserServices
+            return null
+        } catch (e) {
+            alertError(e)
+            return null
+        }
+    }
+}
+
 export const setServices = services => {
     return {
         type: SET_SERVICES,
+        services
+    };
+};
+
+export const setUserServices = services => {
+    return {
+        type: SET_USER_SERVICES,
         services
     };
 };

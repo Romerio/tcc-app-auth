@@ -1,4 +1,4 @@
-import { SET_SERVICES } from "../actions/actionsTypes";
+import { SET_SERVICES, SET_USER_SERVICES } from "../actions/actionsTypes";
 
 const initialState = {
   services: [],
@@ -7,6 +7,11 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_SERVICES:
+      return {
+        ...state,
+        services: action.services
+      };
+      case SET_USER_SERVICES:
       return {
         ...state,
         services: action.services

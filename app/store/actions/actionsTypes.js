@@ -14,3 +14,4 @@ export const AUTH_REMOVE_TOKEN = 'AUTH_REMOVE_TOKEN'
 
 // Services
 export const SET_SERVICES = 'SET_SERVICES'
+export const SET_USER_SERVICES = 'SET_USER_SERVICES'

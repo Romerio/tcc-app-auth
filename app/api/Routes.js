@@ -1,7 +1,7 @@
 import { Constants } from 'expo'
 
-//const baseUrl = Constants.appOwnership === 'expo' ? 'http://192.168.0.5:3000' : 'https://auth-back.herokuapp.com'
-const baseUrl = 'https://auth-back.herokuapp.com'
+const baseUrl = Constants.appOwnership === 'expo' ? 'http://192.168.0.5:3000' : 'https://auth-back.herokuapp.com'
+//const baseUrl = 'https://auth-back.herokuapp.com'
 
 export default {
     LOGIN: {
@@ -12,7 +12,20 @@ export default {
         PATH: `${baseUrl}/api/users/signup`,
         METHOD: 'POST'
     },
-    USERS: { },
+    USERS: { 
+        GET_MY_SERVICES: {
+            PATH: `${baseUrl}/api/users/services`,
+            METHOD: 'GET'
+        },
+        ADD_SERVICES: {
+            PATH: `${baseUrl}/api/users/services`,
+            METHOD: 'POST'
+        },
+        DELETE_SERVICES: {
+            PATH: `${baseUrl}/api/users/services`,
+            METHOD: 'DELETE'
+        }
+    },
     SERVICES: {
         ALL: {
             PATH: `${baseUrl}/api/services`,
