@@ -92,10 +92,13 @@ class FindServices extends Component {
     }
     
     itemSelectedHandler = key => {
-        const selectedPlace = this.props.services.find(p => p.key === key)
+        const selectedService = this.props.services.find(p => p.key === key)
 
-        console.log('- Servico selecionado: ' + selectedPlace.name)
+        console.log('- Servico selecionado: ' + selectedService.name)
 
+        this.props.navigation.navigate('ServiceDetail', { selectedService, title: selectedService.name })
+
+        // Navega para a tela de detalhes
         /*this.props.navigator.push({
             screen: "awesome-places.PlaceDetailScreen",
             title: selectedPlace.name,

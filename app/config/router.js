@@ -14,6 +14,7 @@ import Settings from '../screens/Settings'
 import CodeScanner from '../screens/CodeScanner/CodeScanner'
 import AuthLoadingScreen from '../screens/AuthLoadingScreen/AuthLoadingScreen'
 import Services from '../screens/Services/Services'
+import ServiceDetail from '../screens/ServiceDetail/ServiceDetail'
 
 export const ServiceManager = createStackNavigator({
   Services: { // Mostra todos os serviços
@@ -28,16 +29,7 @@ export const ServiceManager = createStackNavigator({
         color: 'white' 
       }
     }),
-  },
-  ServiceDetail: {
-    screen: Services,
-    navigationOptions: ({ navigation }) => ({
-      title: `Services`,
-    }),
-  },
-}, {
-  mode: 'modal',
-  headerMode: 'none',
+  }
 })
 
 /*
@@ -76,6 +68,7 @@ export const Tabs = createMaterialTopTabNavigator({
       Tab (Autenticador e lista de serviços do usuário)
       Gerenciador de serviços
       Acesso aos itens do Menu lateral (SideMenu)
+      Tela de detalhes de serviço
 */
 export const AppStack = createStackNavigator({
   Tabs: {
@@ -97,12 +90,18 @@ export const AppStack = createStackNavigator({
       title: `Settings`,
     }),
   },
-  ServiceManager: {
-    screen: ServiceManager,
+  ServicesManager: {
+    screen: Services,
     navigationOptions: ({ navigation }) => ({
       title: `Services`,
     }),
   },
+  ServiceDetail: {
+    screen: ServiceDetail,
+    navigationOptions: ({ navigation }) => ({
+      title: navigation.state.params ? navigation.state.params.title : `Detalhes`,
+    }),
+  }
 }, {
   tabBarOptions: {
     showIcon: true,

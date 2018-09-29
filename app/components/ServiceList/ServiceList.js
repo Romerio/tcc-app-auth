@@ -13,31 +13,6 @@ let swipeBtns = [{
     onPress: () => { console.log('swipeBtns press') }
 }];
 
-/*
-// Buttons
-let swipeBtns = [{
-    text: 'Delete',
-    backgroundColor: 'red',
-    underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-    onPress: () => { console.log('swipeBtns press') }
-}];
-
-    <Swipeout wipeout right={swipeBtns}
-        autoClose={true}
-        backgroundColor= 'transparent'>
-        <TouchableOpacity  onPress={props.onItemPressed} >
-            <View style={styles.listItem}>
-                <Image 
-                    source={{uri: props.serviceImage}} 
-                    resizeMode="cover"
-                    style={styles.serviceImage}
-                />
-                <Text>{props.serviceName}</Text>
-            </View>
-        </TouchableOpacity>
-    </Swipeout>
-*/
-
 const serviceList = (props) => {
     const renderFlatItem = (info, enableSwipeout = false) => {
         let flatItemContent = (
@@ -81,7 +56,7 @@ const serviceList = (props) => {
                 <ActionButton 
                     buttonColor="#3498db" 
                     style={{zIndex: 1}}
-                    onPress={() => props.navigation.navigate('ServiceManager', { tabPresentationMode: false })}
+                    onPress={() => props.navigation.navigate('ServicesManager', { tabPresentationMode: false })}
                 />
             : null
             }
@@ -89,23 +64,6 @@ const serviceList = (props) => {
         </View>
     )
 }
-
-/*
-        <ActionButton buttonColor="rgba(231,76,60,1)" style={{zIndex: 3}}
-            onPress={() => console.log("notes tapped!")}
-        >
-          <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-            <Icon name="md-create" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
-
-        <TouchableOpacity
-            style={[styles.buttonIcon, styles.buttomPosition]}
-            onPress={() => console.log('click')}
-        >
-            <Text style={styles.buttonText} >+</Text>
-        </TouchableOpacity>
-*/
 
 const styles = StyleSheet.create({
     listContainer: {
