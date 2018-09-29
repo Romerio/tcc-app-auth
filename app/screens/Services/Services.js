@@ -22,18 +22,34 @@ class FindServices extends Component {
         removeAnim: new Animated.Value(1),
         placesAnim: new Animated.Value(0),
         tabPresentationMode: true,
-        presentindDetail: false
+        reloadServiceList: false
     }
     
     constructor(props) {
         super(props)
 
-        this.props.navigation.addListener('didFocus', this.handleTabWillBlur)
+        this.props.navigation.addListener('didFocus', this.handleTaDidFocus)
+        // this.props.navigation.addListener('willBlur', this.handleTabWillBlur)
     }
 
     handleTabWillBlur = () => {
-        console.log('- didFocus', this.state.tabPresentationMode)
+        //console.log('- willBlur', this.state.tabPresentationMode)
         if(this.state.tabPresentationMode == true) { // Saí da listagem de todos os serviços
+            this.setState({
+                ...this.state,
+                reloadServiceList: true
+            })
+            this.props.onLoadUserServices()
+        }
+    }
+
+    handleTaDidFocus = () => {
+        //console.log('- didFocus', this.state.tabPresentationMode)
+        if(this.state.tabPresentationMode == true) { // Saí da listagem de todos os serviços
+            this.setState({
+                ...this.state,
+                reloadServiceList: true
+            })
             this.props.onLoadUserServices()
         }
     }

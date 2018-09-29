@@ -45,7 +45,7 @@ const serviceList = (props) => {
             <FlatList style={styles.listContainer}
                 data={props.services}
                 onEndReached={() => {
-                    console.log('# onEndReached')
+                    // console.log('# onEndReached')
                 }}
                 onEndReachedThreshold={0}
                 // onRefresh={() => console.log('# onRefresh')}
