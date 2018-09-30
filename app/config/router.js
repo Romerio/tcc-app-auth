@@ -101,7 +101,10 @@ export const AppStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       title: navigation.state.params ? navigation.state.params.title : `Detalhes`,
     }),
-  }
+  },
+  CodeScannerAssociation: {
+    screen: CodeScanner,
+  },
 }, {
   tabBarOptions: {
     showIcon: true,

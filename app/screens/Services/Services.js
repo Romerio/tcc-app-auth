@@ -117,12 +117,24 @@ class FindServices extends Component {
             this.placesLoadedHandler()
         })
     }
+
+    handleAssociationAction = () => {
+        // console.log('- handleAssociationAction')
+    
+        this.props.navigation.navigate('CodeScanner', { 
+            //action: 'association'
+        })
+    }
     
     itemSelectedHandler = key => {
         const selectedService = this.props.services.find(p => p.key === key)
-        // console.log('- Servico selecionado: ' + selectedService.name)
+        // console.log('- Servico selecionado ', selectedService)
 
-        this.props.navigation.navigate('ServiceDetail', { selectedService, title: selectedService.name })
+        this.props.navigation.navigate('ServiceDetail', { 
+            title: selectedService.name,
+            selectedService,
+            onAssociationAction: this.handleAssociationAction
+        })
 
         // Navega para a tela de detalhes
         /*this.props.navigator.push({

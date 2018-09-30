@@ -11,11 +11,16 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
+import { connect } from 'react-redux'
 
-export default class CodeScanner extends Component {
+import { processCodeService } from '../../store/actions/index'
+
+class CodeScanner extends Component {
   state = {
     hasCameraPermission: null,
     lastScannedUrl: null,
+    qrCodeData: null,
+    authMode: null
   };
 
   componentDidMount() {
@@ -32,12 +37,48 @@ export default class CodeScanner extends Component {
   _handleBarCodeRead = result => {
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
-      console.log('- result: ')
-      console.log(result)
+      // this.setState({ lastScannedUrl: result.data });
 
-      this.setState({ lastScannedUrl: result.data });
+      const qrCodeData = typeof result.data === 'string' ? JSON.parse(result.data) : result.data
+      
+      //console.log('- QRCode Lido: ')
+      //console.log(qrCodeData)
+      //console.log('--\n')
+      this.setState({
+        ...this.state,
+        lastScannedUrl: result.data,
+        qrCodeData,
+        authMode: qrCodeData.token ? 'Associar' : 'Autenticar'
+      })
     }
   };
+
+  _handleProcessCode = async () => {
+    try{
+      await this.props.onProcessCodeService(this.state.qrCodeData)
+
+      Alert.alert(
+        'Sucesso',
+         `Processo de ${this.state.authMode} realizado com sucesso`,
+        [
+          { text: 'Ok', onPress: () => {} },
+        ],
+        { cancellable: true }
+      )
+
+      this.setState({
+        lastScannedUrl: null,
+        qrCodeData: null,
+        authMode: null
+      });
+    } catch(e) {
+      this.setState({
+        lastScannedUrl: null,
+        qrCodeData: null,
+        authMode: null
+      });
+    }
+  }
 
   render() {
     return (
@@ -65,13 +106,17 @@ export default class CodeScanner extends Component {
   }
 
   _handlePressUrl = () => {
+    //       ,
+    const labelName = this.state.qrCodeData ? this.state.qrCodeData.service : '...'
+
     Alert.alert(
-      'Open this URL?',
-      this.state.lastScannedUrl,
+      `Deseja se ${this.state.authMode} em ${this.state.qrCodeData.service}?`,
+      labelName,
       [
         {
           text: 'Yes',
-          onPress: () => Linking.openURL(this.state.lastScannedUrl),
+          onPress: () => { this._handleProcessCode()},
+         // onPress: () => Linking.openURL(this.state.lastScannedUrl),
         },
         { text: 'No', onPress: () => {} },
       ],
@@ -80,11 +125,15 @@ export default class CodeScanner extends Component {
   };
 
   _handlePressCancel = () => {
-    this.setState({ lastScannedUrl: null });
+    this.setState({
+      lastScannedUrl: null,
+      qrCodeData: null,
+      authMode: null
+    });
   };
 
   _maybeRenderUrl = () => {
-    if (!this.state.lastScannedUrl) {
+    if (!this.state.qrCodeData) {
       return;
     }
 
@@ -92,7 +141,7 @@ export default class CodeScanner extends Component {
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
           <Text numberOfLines={1} style={styles.urlText}>
-            {this.state.lastScannedUrl}
+            {this.state.qrCodeData.service}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -140,3 +189,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+      isLoading: state.ui.isLoading
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      onProcessCodeService: (data) => dispatch(processCodeService(data))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CodeScanner)

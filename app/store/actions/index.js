@@ -20,5 +20,6 @@ export {
 
 export {
     getServices,
-    getUserServices
+    getUserServices,
+    processCodeService
 } from './services'

@@ -25,7 +25,7 @@ const placeDetail = (props) => {
             {modalContent}
             <View style={styles.associateButton}>
                 <ButtonWithBackground
-                    onPress={() => {}} 
+                    onPress={props.onAssociationAction} 
                     color="#2966ff"
                 >
                     Associate
