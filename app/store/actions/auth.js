@@ -75,7 +75,6 @@ export const authStoreToken = ({ userData, authData }) => {
 
         await AsyncStorage.setItem('ap:user:_id', userData._id)
         await AsyncStorage.setItem('ap:user:name', userData.name)
-        await AsyncStorage.setItem('ap:user:email', userData.email)
         await AsyncStorage.setItem('ap:user:verificationLevel', userData.verificationLevel.toString())
         await AsyncStorage.setItem('ap:auth:token', authData.token)
     }

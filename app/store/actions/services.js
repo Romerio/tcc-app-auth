@@ -7,9 +7,9 @@ import { getAllServices, getMyServices, addService , authenticateService} from '
 const getUserDataFromLocalstorage = async () => {
     const userId = await AsyncStorage.getItem('ap:user:_id')
     const name = await AsyncStorage.getItem('ap:user:name')
-    const email = await AsyncStorage.getItem('ap:user:email')
+    //const email = await AsyncStorage.getItem('ap:user:email')
 
-    return { userId, name, email }
+    return { userId, name }
 }
 
 const alertError = (e = {}) => {
