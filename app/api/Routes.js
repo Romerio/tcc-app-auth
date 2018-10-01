@@ -25,6 +25,10 @@ export default {
         DELETE_SERVICES: {
             PATH: `${baseUrl}/api/users/services`,
             METHOD: 'DELETE'
+        },
+        AUTHENTICATE: {
+            PATH: `/api/users/authLogin`,
+            METHOD: 'POST'
         }
     },
     SERVICES: {

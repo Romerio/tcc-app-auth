@@ -2,7 +2,15 @@ import { AsyncStorage, Alert } from 'react-native'
 
 import { uiSStopLoading, uiStartLoading } from './index'
 import { SET_SERVICES } from './actionsTypes'
-import { getAllServices, getMyServices, addService } from '../../api/index'
+import { getAllServices, getMyServices, addService , authenticateService} from '../../api/index'
+
+const getUserDataFromLocalstorage = async () => {
+    const userId = await AsyncStorage.getItem('ap:user:_id')
+    const name = await AsyncStorage.getItem('ap:user:name')
+    const email = await AsyncStorage.getItem('ap:user:email')
+
+    return { userId, name, email }
+}
 
 const alertError = (e = {}) => {
     Alert.alert(
@@ -101,6 +109,7 @@ const addNewServiceToLocalStorage = async (serviceData) => {
     await AsyncStorage.removeItem(`ap:${userId}:services`)
     await AsyncStorage.setItem(`ap:${userId}:services`, JSON.stringify(services))
 
+    return true
     //console.log('\n[Services]')
     //console.log(services)
 }
@@ -112,28 +121,55 @@ const handleAssociation = async (qrCodeData) => {
     // no banco de dados do Authenticator Manager
     await addService({ payload })
 
-    await addNewServiceToLocalStorage({
+    const result = await addNewServiceToLocalStorage({
         name: qrCodeData.service,
         token: qrCodeData.token
     })
+
+    return result
     /// setar token do servico
+}
+
+const getServiceToken = async (serviceName) => {
+    const userId = await AsyncStorage.getItem('ap:user:_id')
+    const servicesString = await AsyncStorage.getItem(`ap:${userId}:services`)
+
+    if(servicesString) {
+        services = JSON.parse(servicesString)
+        const serviceAlreadyExists = services.findIndex(s => s.name == serviceName)
+    
+        if(serviceAlreadyExists > -1) {
+            //console.log('- substituindo')
+            return services[serviceAlreadyExists].token
+        }
+    }
+
+    return null
 }
 
 export const processCodeService = (qrCodeData) => {
     return async (dispatch, getState) => {
         try {
+            let result = null
             if(!qrCodeData) return null;
 
             await dispatch(uiStartLoading())
 
             if(qrCodeData.token) { // adicionar/associar servico
-                await handleAssociation(qrCodeData)
+                result = await handleAssociation(qrCodeData)
             } else {
-                console.log('- #TO-DO: autenticar')
+                const serviceToken = await getServiceToken(qrCodeData.service)
+                result = await authenticateService({ 
+                    payload: {
+                        browserToken: qrCodeData.browserToken,
+                        userToken: serviceToken
+                    },
+                    domain: qrCodeData.domain
+                })
             }
 
             await dispatch(uiSStopLoading())
-            return null
+            return result
         } catch (e) {
             alertError(e)
             await dispatch(uiSStopLoading())

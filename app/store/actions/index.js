@@ -10,7 +10,8 @@ export {
     tryAuth,
     authGetToken,
     authAutoSignIn,
-    authLogout
+    authLogout,
+    authenticate
 } from './auth'
 
 export {

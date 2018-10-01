@@ -3,7 +3,8 @@ export {
     signUp,
     getMyServices,
     addService,
-    deleteService
+    deleteService,
+    authenticateService
 } from './user'
 
 export {

@@ -80,3 +80,25 @@ export const deleteService = async ({ payload }) => {
         throw e
     }
 }
+
+export const authenticateService = async ({ domain, payload }) => {
+    try {
+        let url = mekeUrl(domain+ROUTES.USERS.AUTHENTICATE.PATH)
+        const data = { 
+            url,
+            method: ROUTES.USERS.AUTHENTICATE.METHOD,
+            payload
+        }
+
+        //console.log('- authenticate')
+        //console.log(data)
+
+        const responseData = await fetchData(data)
+        //console.log('- response')
+        //console.log(responseData)
+
+        return responseData
+    } catch (e) {
+        throw e
+    }
+}

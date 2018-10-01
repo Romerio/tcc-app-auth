@@ -55,16 +55,27 @@ class CodeScanner extends Component {
 
   _handleProcessCode = async () => {
     try{
-      await this.props.onProcessCodeService(this.state.qrCodeData)
+      const result = await this.props.onProcessCodeService(this.state.qrCodeData)
 
-      Alert.alert(
-        'Sucesso',
-         `Processo de ${this.state.authMode} realizado com sucesso`,
-        [
-          { text: 'Ok', onPress: () => {} },
-        ],
-        { cancellable: true }
-      )
+      if(result) {
+        Alert.alert(
+          'Sucesso',
+           `Processo de ${this.state.authMode} realizado com sucesso`,
+          [
+            { text: 'Ok', onPress: () => {} },
+          ],
+          { cancellable: true }
+        )
+      } else {
+        Alert.alert(
+          'Falha',
+           `Não foi possíve realizar o processo de ${this.state.authMode}`,
+          [
+            { text: 'Ok', onPress: () => {} },
+          ],
+          { cancellable: true }
+        )
+      }
 
       this.setState({
         lastScannedUrl: null,
